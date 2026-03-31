@@ -2,6 +2,8 @@
 
 基于 ESP32 微控制器和 ZE08-CH2O 传感器的甲醛浓度监测系统，支持 WiFi 配网、Web 监控和数据上报。
 
+> **相关项目:** [CH2O-Monitor-Server](https://github.com/pkl1024/CH2O-Monitor-Server) - Java 服务器端，接收数据并提供 Web 可视化界面
+
 ## 功能特性
 
 - 🏠 **ZE08-CH2O 甲醛监测** - 通过 UART 读取甲醛浓度（ppb/ppm/mg/m³）
@@ -82,7 +84,7 @@ pio device monitor               # 串口监控（115200 波特率）
 
 ```json
 {
-  "device_id": "esp32_cat_litter_001",
+  "device_id": "esp32_ch2o_001",
   "batch_size": 3,
   "samples": [
     {
