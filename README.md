@@ -60,6 +60,8 @@ pio device monitor               # 串口监控（115200 波特率）
 
 ### JSON 数据格式
 
+#### 传感器数据 (`/sensor`)
+
 ```json
 {
   "ch2o": {
@@ -73,6 +75,64 @@ pio device monitor               # 串口监控（115200 波特率）
   "timestamp": "00:01:23"
 }
 ```
+
+#### 数据上报格式 (POST 到服务器)
+
+设备定时将缓存的数据批量上报到配置的服务器 URL，请求体格式：
+
+```json
+{
+  "device_id": "esp32_cat_litter_001",
+  "batch_size": 3,
+  "samples": [
+    {
+      "timestamp": "2026-03-31 14:30:00",
+      "uptime_ms": 3600000,
+      "ch2o": {
+        "valid": true,
+        "concentration_ppb": 45.23,
+        "concentration_ppm": 0.0452,
+        "concentration_mgm3": 0.0552
+      },
+      "wifi_rssi": -58
+    },
+    {
+      "timestamp": "2026-03-31 14:35:00",
+      "uptime_ms": 3630000,
+      "ch2o": {
+        "valid": true,
+        "concentration_ppb": 48.67,
+        "concentration_ppm": 0.0487,
+        "concentration_mgm3": 0.0594
+      },
+      "wifi_rssi": -62
+    },
+    {
+      "timestamp": "2026-03-31 14:40:00",
+      "uptime_ms": 3660000,
+      "ch2o": {
+        "valid": true,
+        "concentration_ppb": 42.15,
+        "concentration_ppm": 0.0422,
+        "concentration_mgm3": 0.0515
+      },
+      "wifi_rssi": -55
+    }
+  ]
+}
+```
+
+| 字段 | 说明 |
+|------|------|
+| `device_id` | 设备标识符 |
+| `batch_size` | 本次上报的样本数量 |
+| `samples[].timestamp` | 采样时间（NTP 同步） |
+| `samples[].uptime_ms` | 设备运行时间（毫秒） |
+| `samples[].ch2o.valid` | 传感器数据是否有效 |
+| `samples[].ch2o.concentration_ppb` | 甲醛浓度 |
+| `samples[].ch2o.concentration_ppm` | 甲醛浓度 |
+| `samples[].ch2o.concentration_mgm3` | 甲醛浓度（mg/m³） |
+| `samples[].wifi_rssi` | WiFi 信号强度 |
 
 ## 甲醛健康阈值
 
