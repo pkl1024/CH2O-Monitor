@@ -17,7 +17,7 @@
 #define DISABLE_LED            // 关闭板载LED
 
 // ============== AP热点配置 ==============
-const char* const AP_SSID = "ESP32_CatShit";    // AP热点名称
+const char* const AP_SSID = "ESP32_CH2O_Monitor";    // AP热点名称
 const char* const AP_PASSWORD = "12345678";      // AP热点密码(至少8位)
 const int AP_CHANNEL = 1;                          // AP信道
 const unsigned long AP_TIMEOUT = 60000;           // AP热点开启1分钟后关闭
@@ -51,7 +51,7 @@ const unsigned long CACHE_SAMPLE_INTERVAL = 5000; // 缓存采样间隔: 5秒 (5
 const int MAX_CACHED_SAMPLES = 200; // 最大缓存样本数 (约16分钟数据)
 const unsigned long RETRY_INTERVAL = 60000; // 重试间隔: 60秒 (60000ms)
 const char* const REPORT_PATH = "/api/collect"; // 上报API路径
-const char* const DEVICE_ID = "esp32_cat_litter_001"; // 设备ID
+const char* const DEVICE_ID = "esp32_ch2o_001"; // 设备ID
 
 // ============== NTP时间同步配置 ==============
 const char* const NTP_SERVER = "ntp.aliyun.com";

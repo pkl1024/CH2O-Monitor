@@ -38,7 +38,7 @@ pio device monitor               # 串口监控（115200 波特率）
 
 ### WiFi 配网
 
-1. 设备启动后创建热点 `ESP32_CatShit`（密码：`12345678`）
+1. 设备启动后创建热点 `ESP32_CH2O_Monitor`（密码：`12345678`）
 2. 连接热点后自动弹出配网页面
 3. 选择 WiFi 网络并输入密码
 4. 配网成功后凭证自动保存
@@ -157,7 +157,7 @@ const float CH2O_THRESHOLD_ALERT = 0.30f;    // 警报阈值 mg/m³
 
 // 数据上报配置
 const unsigned long REPORT_INTERVAL = 1800000;  // 上报间隔: 30分钟
-const char* const DEVICE_ID = "esp32_cat_litter_001"; // 设备ID
+const char* const DEVICE_ID = "esp32_ch2o_001"; // 设备ID
 
 // 节能配置
 const int CPU_FREQ_MHZ = 80;  // CPU频率: 80MHz (节能模式)
