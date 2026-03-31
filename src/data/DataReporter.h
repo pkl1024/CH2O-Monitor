@@ -192,7 +192,8 @@ public:
         json += "\"fail_count\":" + String(report_fail_count_) + ",";
         json += "\"cached_samples\":" + String(sample_count_) + ",";
         json += "\"max_samples\":" + String(MAX_CACHED_SAMPLES) + ",";
-        json += "\"uploading\":" + String(is_uploading_ ? "true" : "false");
+        json += "\"uploading\":" + String(is_uploading_ ? "true" : "false") + ",";
+        json += "\"last_error\":\"" + last_error_message_ + "\"";
         json += "}";
         return json;
     }
@@ -406,8 +407,25 @@ private:
 
             if (http_code == HTTP_CODE_OK) {
                 String response = http.getString();
-                DEBUG_PRINT("[上报] 成功! 响应: ");
+                DEBUG_PRINT("[上报] 响应: ");
                 DEBUG_PRINTLN(response);
+
+                // 解析响应，检查是否有错误
+                if (response.indexOf("\"success\":false") >= 0) {
+                    // 提取错误消息
+                    int msgStart = response.indexOf("\"message\":\"");
+                    if (msgStart >= 0) {
+                        msgStart += 11;
+                        int msgEnd = response.indexOf("\"", msgStart);
+                        if (msgEnd > msgStart) {
+                            last_error_message_ = response.substring(msgStart, msgEnd);
+                        }
+                    }
+                    DEBUG_PRINT("[上报] 服务器拒绝: ");
+                    DEBUG_PRINTLN(last_error_message_);
+                    report_fail_count_++;
+                    break;  // 服务器明确拒绝，不重试
+                }
 
                 // 成功：移除已上报的样本
                 sample_tail_ = (sample_tail_ + upload_count) % MAX_CACHED_SAMPLES;
@@ -416,6 +434,26 @@ private:
                 report_success_count_++;
                 report_fail_count_ = 0; // 清除失败计数
                 success = true;
+            } else if (http_code == 403) {
+                // 设备未注册
+                String response = http.getString();
+                DEBUG_PRINT("[上报] 设备未注册! 响应: ");
+                DEBUG_PRINTLN(response);
+
+                // 提取错误消息
+                int msgStart = response.indexOf("\"message\":\"");
+                if (msgStart >= 0) {
+                    msgStart += 11;
+                    int msgEnd = response.indexOf("\"", msgStart);
+                    if (msgEnd > msgStart) {
+                        last_error_message_ = response.substring(msgStart, msgEnd);
+                    }
+                } else {
+                    last_error_message_ = "此设备未记录，请联系管理员";
+                }
+                DEBUG_PRINTLN(last_error_message_);
+                report_fail_count_++;
+                break;  // 设备未注册，不重试
             } else {
                 DEBUG_PRINT("[上报] 失败! HTTP错误码: ");
                 DEBUG_PRINT(http_code);

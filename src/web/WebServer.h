@@ -355,6 +355,7 @@ private:
             html += "<div class='data-item'><span class='data-label'>缓存样本:</span><span class='data-value' id='cachedSamples'>" + String(reporter_->getSampleCount()) + "/" + String(reporter_->getMaxSamples()) + "</span></div>";
             html += "<div class='data-item'><span class='data-label'>成功次数:</span><span class='data-value' id='successCount'>0</span></div>";
             html += "<div class='data-item'><span class='data-label'>失败次数:</span><span class='data-value' id='failCount'>0</span></div>";
+            html += "<div class='data-item'><span class='data-label'>错误信息:</span><span class='data-value' id='errorMsg' style='color:#dc3545;'></span></div>";
         }
         html += "<div class='form-group'><label>上报地址</label><input type='text' id='serverUrl' placeholder='例如: https://server.wayok.cn/DataCollection/api/collect' style='width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;font-size:16px;'></div>";
         html += "<div style='text-align:center;margin-top:10px;'>";
@@ -402,6 +403,9 @@ private:
         html += "document.getElementById('cachedSamples').textContent=(data.cached_samples||0)+'/'+(data.max_samples||100);";
         html += "document.getElementById('successCount').textContent=data.success_count||0;";
         html += "document.getElementById('failCount').textContent=data.fail_count||0;";
+        html += "if(data.last_error&&data.fail_count>0){";
+        html += "document.getElementById('errorMsg').textContent=data.last_error;";
+        html += "}else{document.getElementById('errorMsg').textContent='';}";
         html += "}).catch(e=>{});}";
         html += "function saveReportConfig(){";
         html += "let url=document.getElementById('serverUrl').value;";
